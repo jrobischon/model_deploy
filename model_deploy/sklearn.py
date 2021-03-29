@@ -32,7 +32,7 @@ class SklearnModel(object):
         X_ = json.loads(X)
         X_ = np.array(X_)
 
-        if len(X.shape) == 1:
+        if len(X_.shape) == 1:
             # Convert from 1D to 2D array
             X_ = X_.reshape(1, -1)
 
@@ -134,4 +134,4 @@ class SklearnModel(object):
 
         pred_out = {"predictions": y_pred, "version": self.version}
 
-        return return_code, y_pred
+        return return_code, pred_out
