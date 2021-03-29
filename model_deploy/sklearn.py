@@ -10,6 +10,10 @@ class SklearnModel(object):
         self.model = None
 
     def _load_model(self):
+        """
+        Load model from pickle file
+        """
+
         logging.info(f"Loading model {self.filename}")
         self.model = load(self.filename)
 
@@ -37,10 +41,24 @@ class SklearnModel(object):
 
     def predict(self, X):
         """
+        Make predictions with model .predict() method
 
+        Args:
+            X (JSON object) : Object containing model input features
 
-        :param X:
-        :return:
+        Returns:
+            return_code (int):
+                0 = Success
+                1 = Model Encountered a ValueError
+                2 = Model does not have a .predict() method
+
+            pred_out (dict): Dictionary containing model predictions
+
+                Example output:
+                    {
+                     "predictions" : [1, 0, 1, 0],
+                     "version" : '0.1.0'
+                     }
         """
 
         if self.model is None:
@@ -74,10 +92,24 @@ class SklearnModel(object):
 
     def predict_proba(self, X):
         """
+        Make predictions with model .predict_proba() method
 
+        Args:
+            X (JSON object) : Object containing model input features
 
-        :param X:
-        :return:
+        Returns:
+            return_code (int):
+                0 = Success
+                1 = Model Encountered a ValueError
+                2 = Model does not have a .predict() method
+
+            pred_out (dict): Dictionary containing model predictions
+
+                Example output:
+                    {
+                     "predictions" : [0.1, 0.22, 0.3, 0.55],
+                     "version" : '0.1.0'
+                     }
         """
 
         if self.model is None:
@@ -95,8 +127,8 @@ class SklearnModel(object):
                 f"Predictions: {y_pred}"
             )
         except ValueError as e:
-            logging.error(f"ERROR: Invalid input for model version {self.version}",
-                          f"Input: {X}",
+            logging.error(f"ERROR: Invalid input for model version {self.version}"
+                          f"Input: {X}"
                           f"Error message: {e}")
             y_pred = None
 
