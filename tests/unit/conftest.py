@@ -1,4 +1,6 @@
 import pytest
+import pickle
+import io
 from sklearn.datasets import make_classification, make_regression
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 
@@ -26,7 +28,9 @@ def random_forest_binary(binary_classifier_data):
     X_train, y_train = binary_classifier_data
     rf = RandomForestClassifier(random_state=80134)
     rf.fit(X_train, y_train)
-    return rf
+
+    rf_pkl = pickle.dumps(rf)
+    return io.BytesIO(rf_pkl)
 
 @pytest.fixture()
 def random_forest_multi(multi_classifier_data):
@@ -34,7 +38,9 @@ def random_forest_multi(multi_classifier_data):
     X_train, y_train = multi_classifier_data
     rf = RandomForestClassifier(random_state=80134)
     rf.fit(X_train, y_train)
-    return rf
+
+    rf_pkl = pickle.dumps(rf)
+    return io.BytesIO(rf_pkl)
 
 @pytest.fixture()
 def random_forest_multi(multi_classifier_data):
@@ -42,5 +48,7 @@ def random_forest_multi(multi_classifier_data):
     X_train, y_train = multi_classifier_data
     rf = RandomForestRegressor(random_state=80134)
     rf.fit(X_train, y_train)
-    return rf
+
+    rf_pkl = pickle.dumps(rf)
+    return io.BytesIO(rf_pkl)
 
