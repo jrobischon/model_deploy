@@ -4,6 +4,7 @@ import json
 from model_deploy import SklearnModel
 from sklearn.ensemble import RandomForestClassifier
 
+
 def is_jsonable(x):
     """
     Check if input x can be converted to JSON
@@ -88,13 +89,69 @@ def test_predict_valid_input(binary_classifier_data, random_forest_binary):
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    y_pred = sk_model.predict(X_json)
+    out = sk_model.predict(X_json)
 
-    assert is_jsonable(y_pred)
-    assert isinstance(y_pred, dict)
-    assert isinstance(y_pred["predictions"], list)
-    assert len(y_pred["predictions"]) == len(y)
-    assert y_pred["version"] == sk_model.version
+    assert is_jsonable(out)
+    assert isinstance(out, dict)
+    assert isinstance(out["predictions"], list)
+    assert len(out["predictions"]) == len(y)
+    assert out["version"] == sk_model.version
+    assert out["error_msg"] is None
+
+def test_predict_null_input(binary_classifier_data, random_forest_binary):
+
+    X, y = binary_classifier_data
+
+    # Drop columns
+    X[:10, 0] = np.nan
+
+    X_json = json.dumps(X.tolist())
+
+    sk_model = SklearnModel(filename=random_forest_binary,
+                            version='0.1.0')
+
+    out = sk_model.predict(X_json)
+
+    assert is_jsonable(out)
+    assert out["version"] == sk_model.version
+    assert out["predictions"] is None
+    assert out["error_msg"] is not None
+
+def test_predict_invalid_columns(binary_classifier_data, random_forest_binary):
+
+    X, y = binary_classifier_data
+
+    # Drop columns
+    X = X[:, :5]
+
+    X_json = json.dumps(X.tolist())
+
+    sk_model = SklearnModel(filename=random_forest_binary,
+                            version='0.1.0')
+
+    out = sk_model.predict(X_json)
+
+    assert is_jsonable(out)
+    assert out["version"] == sk_model.version
+    assert out["predictions"] is None
+    assert out["error_msg"] is not None
+
+def test_predict_no_predict_method(binary_classifier_data, random_forest_binary):
+
+    X, y = binary_classifier_data
+
+    X_json = json.dumps(X.tolist())
+
+    sk_model = SklearnModel(filename=random_forest_binary,
+                            version='0.1.0')
+
+    sk_model.model = 'model_object'
+    out = sk_model.predict(X_json)
+
+    assert is_jsonable(out)
+    assert out["version"] == sk_model.version
+    assert out["predictions"] is None
+    assert out["error_msg"] == "Model .predict() method does not exist"
 
 def test_predict_proba_valid_input(binary_classifier_data, random_forest_binary):
 
@@ -105,11 +162,67 @@ def test_predict_proba_valid_input(binary_classifier_data, random_forest_binary)
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    y_pred = sk_model.predict_proba(X_json)
+    out = sk_model.predict_proba(X_json)
 
-    assert is_jsonable(y_pred)
-    assert isinstance(y_pred, dict)
-    assert isinstance(y_pred["predictions"], list)
-    assert len(y_pred["predictions"]) == len(y)
-    assert len(y_pred["predictions"][0]) == 2
-    assert y_pred["version"] == sk_model.version
+    assert is_jsonable(out)
+    assert isinstance(out, dict)
+    assert isinstance(out["predictions"], list)
+    assert len(out["predictions"]) == len(y)
+    assert len(out["predictions"][0]) == 2
+    assert out["version"] == sk_model.version
+    assert out["error_msg"] is None
+
+def test_predict_proba_null_input(binary_classifier_data, random_forest_binary):
+
+    X, y = binary_classifier_data
+
+    # Drop columns
+    X[:10, 0] = np.nan
+
+    X_json = json.dumps(X.tolist())
+
+    sk_model = SklearnModel(filename=random_forest_binary,
+                            version='0.1.0')
+
+    out = sk_model.predict_proba(X_json)
+
+    assert is_jsonable(out)
+    assert out["version"] == sk_model.version
+    assert out["predictions"] is None
+    assert out["error_msg"] is not None
+
+def test_predict_proba_invalid_columns(binary_classifier_data, random_forest_binary):
+
+    X, y = binary_classifier_data
+
+    # Drop columns
+    X = X[:, :5]
+
+    X_json = json.dumps(X.tolist())
+
+    sk_model = SklearnModel(filename=random_forest_binary,
+                            version='0.1.0')
+
+    out = sk_model.predict_proba(X_json)
+
+    assert is_jsonable(out)
+    assert out["version"] == sk_model.version
+    assert out["predictions"] is None
+    assert out["error_msg"] is not None
+
+
+def test_predict_no_predict_proba_method(regression_data, random_forest_regressor):
+
+    X, y = regression_data
+
+    X_json = json.dumps(X.tolist())
+
+    sk_model = SklearnModel(filename=random_forest_regressor,
+                            version='0.1.0')
+
+    out = sk_model.predict_proba(X_json)
+
+    assert is_jsonable(out)
+    assert out["version"] == sk_model.version
+    assert out["predictions"] is None
+    assert out["error_msg"] == "Model .predict_proba() method does not exist"
