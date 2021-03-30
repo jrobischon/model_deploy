@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 import json
 from model_deploy import SklearnModel
+from sklearn.ensemble import RandomForestClassifier
 
 def is_jsonable(x):
     """
@@ -74,6 +75,7 @@ def test_model_load_correct(random_forest_binary):
                             version='0.1.0')
 
     sk_model._load_model()
+    assert isinstance(sk_model.model, RandomForestClassifier)
     assert sk_model.model.feature_importances_.shape == (10,)
 
 
@@ -86,9 +88,9 @@ def test_predict_valid_input(binary_classifier_data, random_forest_binary):
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    return_code, y_pred = sk_model.predict(X_json)
+    y_pred = sk_model.predict(X_json)
 
-    assert return_code == 0
+    assert is_jsonable(y_pred)
     assert isinstance(y_pred, dict)
     assert isinstance(y_pred["predictions"], list)
     assert len(y_pred["predictions"]) == len(y)
@@ -103,9 +105,9 @@ def test_predict_proba_valid_input(binary_classifier_data, random_forest_binary)
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    return_code, y_pred = sk_model.predict_proba(X_json)
+    y_pred = sk_model.predict_proba(X_json)
 
-    assert return_code == 0
+    assert is_jsonable(y_pred)
     assert isinstance(y_pred, dict)
     assert isinstance(y_pred["predictions"], list)
     assert len(y_pred["predictions"]) == len(y)

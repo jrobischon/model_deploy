@@ -47,11 +47,6 @@ class SklearnModel(object):
             X (JSON object) : Object containing model input features
 
         Returns:
-            return_code (int):
-                0 = Success
-                1 = Model Encountered a ValueError
-                2 = Model does not have a .predict() method
-
             pred_out (dict): Dictionary containing model predictions
 
                 Example output:
@@ -70,7 +65,6 @@ class SklearnModel(object):
         if hasattr(self.model, 'predict'):
             try:
                 y_pred = self.model.predict(X).tolist()
-                return_code = 0
                 logging.info(
                     f"Making predictions for model version {self.version}"
                     f"Input: {X}"
@@ -78,16 +72,13 @@ class SklearnModel(object):
                 )
             except ValueError:
                 y_pred = None
-                return_code = 1
-
         else:
             logging.error("Model .predict() method does not exist")
             y_pred = None
-            return_code = 2
 
         pred_out = {"predictions": y_pred, "version": self.version}
 
-        return return_code, pred_out
+        return pred_out
 
 
     def predict_proba(self, X):
@@ -98,11 +89,6 @@ class SklearnModel(object):
             X (JSON object) : Object containing model input features
 
         Returns:
-            return_code (int):
-                0 = Success
-                1 = Model Encountered a ValueError
-                2 = Model does not have a .predict() method
-
             pred_out (dict): Dictionary containing model predictions
 
                 Example output:
@@ -120,7 +106,6 @@ class SklearnModel(object):
 
         try:
             y_pred = self.model.predict_proba(X).tolist()
-            return_code = 0
             logging.info(
                 f"Making predictions with model version {self.version}"
                 f"Input: {X}"
@@ -134,4 +119,4 @@ class SklearnModel(object):
 
         pred_out = {"predictions": y_pred, "version": self.version}
 
-        return return_code, pred_out
+        return pred_out
