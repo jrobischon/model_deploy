@@ -53,6 +53,7 @@ class SklearnModel(object):
                     {
                      "predictions" : [1, 0, 1, 0],
                      "version" : '0.1.0'
+                     "error_msg" : None
                      }
         """
 
@@ -65,18 +66,22 @@ class SklearnModel(object):
         if hasattr(self.model, 'predict'):
             try:
                 y_pred = self.model.predict(X).tolist()
+                err_msg = None
                 logging.info(
                     f"Making predictions for model version {self.version}"
                     f"Input: {X}"
                     f"Predictions: {y_pred}"
                 )
-            except ValueError:
+            except ValueError as e:
                 y_pred = None
+                err_msg = str(e)
+                logging.exception(err_msg)
         else:
-            logging.error("Model .predict() method does not exist")
             y_pred = None
+            err_msg = "Model .predict() method does not exist"
+            logging.exception(err_msg)
 
-        pred_out = {"predictions": y_pred, "version": self.version}
+        pred_out = {"predictions": y_pred, "version": self.version, "error_msg": err_msg}
 
         return pred_out
 
@@ -94,7 +99,8 @@ class SklearnModel(object):
                 Example output:
                     {
                      "predictions" : [0.1, 0.22, 0.3, 0.55],
-                     "version" : '0.1.0'
+                     "version" : '0.1.0',
+                     "error_msg" : None
                      }
         """
 
@@ -104,19 +110,27 @@ class SklearnModel(object):
         # Transform input into numpy array
         X = self._transform_input(X)
 
-        try:
-            y_pred = self.model.predict_proba(X).tolist()
-            logging.info(
-                f"Making predictions with model version {self.version}"
-                f"Input: {X}"
-                f"Predictions: {y_pred}"
-            )
-        except ValueError as e:
-            logging.error(f"ERROR: Invalid input for model version {self.version}"
-                          f"Input: {X}"
-                          f"Error message: {e}")
+        if hasattr(self.model, 'predict_proba'):
+            try:
+                y_pred = self.model.predict_proba(X).tolist()
+                err_msg = None
+                logging.info(
+                    f"Making predictions with model version {self.version}"
+                    f"Input: {X}"
+                    f"Predictions: {y_pred}"
+                )
+            except ValueError as e:
+                logging.error(f"ERROR: Invalid input for model version {self.version}"
+                              f"Input: {X}"
+                              f"Error message: {e}")
+                y_pred = None
+                err_msg = str(e)
+                logging.exception(err_msg)
+        else:
             y_pred = None
+            err_msg = "Model .predict_proba() method does not exist"
+            logging.exception(err_msg)
 
-        pred_out = {"predictions": y_pred, "version": self.version}
+        pred_out = {"predictions": y_pred, "version": self.version, "error_msg": err_msg}
 
         return pred_out
