@@ -43,9 +43,9 @@ def random_forest_multi(multi_classifier_data):
     return io.BytesIO(rf_pkl)
 
 @pytest.fixture()
-def random_forest_multi(multi_classifier_data):
+def random_forest_regressor(regression_data):
     # Train random forest regressor
-    X_train, y_train = multi_classifier_data
+    X_train, y_train = regression_data
     rf = RandomForestRegressor(random_state=80134)
     rf.fit(X_train, y_train)
 
