@@ -3,7 +3,7 @@ import numpy as np
 import json
 import logging
 
-class SklearnModel(object):
+class ScikitModel(object):
     def __init__(self, filename, version):
         self.filename = filename
         self.version = version
