@@ -42,7 +42,7 @@ def test_transform_1d_to_numpy():
     sk_model = SklearnModel(filename=None, version='0.1.0')
 
     # Check 1D array is converted to 2D
-    x = json.dumps([1, 2, 3])
+    x = [1, 2, 3]
     x_ = sk_model._transform_input(x)
 
     np.testing.assert_array_equal(x_, np.array([[1,2,3]]))
@@ -53,7 +53,7 @@ def test_transform_2d_to_numpy():
     sk_model = SklearnModel(filename=None, version='0.1.0')
 
     # Check 2D array is converted properly
-    x = json.dumps([[1, 2, 3], [4, 5, 6]])
+    x = [[1, 2, 3], [4, 5, 6]]
     x_ = sk_model._transform_input(x)
 
     np.testing.assert_array_equal(x_, np.array([[1,2,3], [4, 5, 6]]))
@@ -84,12 +84,12 @@ def test_predict_valid_input(binary_classifier_data, random_forest_binary):
 
     X, y = binary_classifier_data
 
-    X_json = json.dumps(X.tolist())
+    X_list = X.tolist()
 
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    out = sk_model.predict(X_json)
+    out = sk_model.predict(X_list)
 
     assert is_jsonable(out)
     assert isinstance(out, dict)
@@ -105,12 +105,12 @@ def test_predict_null_input(binary_classifier_data, random_forest_binary):
     # Drop columns
     X[:10, 0] = np.nan
 
-    X_json = json.dumps(X.tolist())
+    X_list = X.tolist()
 
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    out = sk_model.predict(X_json)
+    out = sk_model.predict(X_list)
 
     assert is_jsonable(out)
     assert out["version"] == sk_model.version
@@ -124,12 +124,12 @@ def test_predict_invalid_columns(binary_classifier_data, random_forest_binary):
     # Drop columns
     X = X[:, :5]
 
-    X_json = json.dumps(X.tolist())
+    X_list = X.tolist()
 
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    out = sk_model.predict(X_json)
+    out = sk_model.predict(X_list)
 
     assert is_jsonable(out)
     assert out["version"] == sk_model.version
@@ -140,13 +140,13 @@ def test_predict_no_predict_method(binary_classifier_data, random_forest_binary)
 
     X, y = binary_classifier_data
 
-    X_json = json.dumps(X.tolist())
+    X_list = X.tolist()
 
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
     sk_model.model = 'model_object'
-    out = sk_model.predict(X_json)
+    out = sk_model.predict(X_list)
 
     assert is_jsonable(out)
     assert out["version"] == sk_model.version
@@ -157,12 +157,12 @@ def test_predict_proba_valid_input(binary_classifier_data, random_forest_binary)
 
     X, y = binary_classifier_data
 
-    X_json = json.dumps(X.tolist())
+    X_list = X.tolist()
 
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    out = sk_model.predict_proba(X_json)
+    out = sk_model.predict_proba(X_list)
 
     assert is_jsonable(out)
     assert isinstance(out, dict)
@@ -179,12 +179,12 @@ def test_predict_proba_null_input(binary_classifier_data, random_forest_binary):
     # Drop columns
     X[:10, 0] = np.nan
 
-    X_json = json.dumps(X.tolist())
+    X_list = X.tolist()
 
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    out = sk_model.predict_proba(X_json)
+    out = sk_model.predict_proba(X_list)
 
     assert is_jsonable(out)
     assert out["version"] == sk_model.version
@@ -198,12 +198,12 @@ def test_predict_proba_invalid_columns(binary_classifier_data, random_forest_bin
     # Drop columns
     X = X[:, :5]
 
-    X_json = json.dumps(X.tolist())
+    X_list = X.tolist()
 
     sk_model = SklearnModel(filename=random_forest_binary,
                             version='0.1.0')
 
-    out = sk_model.predict_proba(X_json)
+    out = sk_model.predict_proba(X_list)
 
     assert is_jsonable(out)
     assert out["version"] == sk_model.version
@@ -215,12 +215,12 @@ def test_predict_no_predict_proba_method(regression_data, random_forest_regresso
 
     X, y = regression_data
 
-    X_json = json.dumps(X.tolist())
+    X_list = X.tolist()
 
     sk_model = SklearnModel(filename=random_forest_regressor,
                             version='0.1.0')
 
-    out = sk_model.predict_proba(X_json)
+    out = sk_model.predict_proba(X_list)
 
     assert is_jsonable(out)
     assert out["version"] == sk_model.version

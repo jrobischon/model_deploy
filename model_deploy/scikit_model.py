@@ -20,17 +20,16 @@ class SklearnModel(object):
     @staticmethod
     def _transform_input(X):
         """
-        Convert input from JSON object into a numpy array
+        Convert input from list into a numpy array
 
         Args:
-            X (JSON object) : Input JSON data
+            X (list) : Input data
 
         Returns:
             X_ (np.array) : Numpy array
         """
 
-        X_ = json.loads(X)
-        X_ = np.array(X_)
+        X_ = np.array(X)
 
         if len(X_.shape) == 1:
             # Convert from 1D to 2D array
@@ -38,33 +37,33 @@ class SklearnModel(object):
 
         return X_
 
-
-    def predict(self, X):
+    def predict(self, data):
         """
         Make predictions with model .predict() method
 
         Args:
-            X (JSON object) : Object containing model input features
+            data (list) : List containing model input features
 
         Returns:
             pred_out (dict): Dictionary containing model predictions
 
-                Example output:
+                Example output on success:
                     {
                      "predictions" : [1, 0, 1, 0],
                      "version" : '0.1.0'
                      "error_msg" : None
                      }
+
         """
 
         if self.model is None:
             self._load_model()
 
-        # Transform input into numpy array
-        X = self._transform_input(X)
-
         if hasattr(self.model, 'predict'):
             try:
+                # Transform input into numpy array
+                X = self._transform_input(data)
+
                 y_pred = self.model.predict(X).tolist()
                 err_msg = None
                 logging.info(
@@ -86,17 +85,17 @@ class SklearnModel(object):
         return pred_out
 
 
-    def predict_proba(self, X):
+    def predict_proba(self, data):
         """
         Make predictions with model .predict_proba() method
 
         Args:
-            X (JSON object) : Object containing model input features
+            data (list) : List containing model input features
 
         Returns:
             pred_out (dict): Dictionary containing model predictions
 
-                Example output:
+                Example output on success:
                     {
                      "predictions" : [0.1, 0.22, 0.3, 0.55],
                      "version" : '0.1.0',
@@ -107,11 +106,11 @@ class SklearnModel(object):
         if self.model is None:
             self._load_model()
 
-        # Transform input into numpy array
-        X = self._transform_input(X)
-
         if hasattr(self.model, 'predict_proba'):
             try:
+                # Transform input into numpy array
+                X = self._transform_input(data)
+
                 y_pred = self.model.predict_proba(X).tolist()
                 err_msg = None
                 logging.info(
