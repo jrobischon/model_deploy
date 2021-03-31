@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 import json
-from model_deploy import SklearnModel
+from ml_api import ScikitModel
 from sklearn.ensemble import RandomForestClassifier
 
 
@@ -39,7 +39,7 @@ def test_is_jsonable_correct(input,expected):
 
 def test_transform_1d_to_numpy():
     # Test that input is converted to numpy
-    sk_model = SklearnModel(filename=None, version='0.1.0')
+    sk_model = ScikitModel(filename=None, version='0.1.0')
 
     # Check 1D array is converted to 2D
     x = [1, 2, 3]
@@ -50,7 +50,7 @@ def test_transform_1d_to_numpy():
 
 def test_transform_2d_to_numpy():
     # Test that input is converted to numpy
-    sk_model = SklearnModel(filename=None, version='0.1.0')
+    sk_model = ScikitModel(filename=None, version='0.1.0')
 
     # Check 2D array is converted properly
     x = [[1, 2, 3], [4, 5, 6]]
@@ -61,7 +61,7 @@ def test_transform_2d_to_numpy():
 
 def test_model_lazy_load(random_forest_binary):
     # Test that model is lazily loaded
-    sk_model = SklearnModel(filename=random_forest_binary,
+    sk_model = ScikitModel(filename=random_forest_binary,
                             version='0.1.0')
 
     assert sk_model.model is None
@@ -72,7 +72,7 @@ def test_model_lazy_load(random_forest_binary):
 
 def test_model_load_correct(random_forest_binary):
     # Test that model is loaded correctly
-    sk_model = SklearnModel(filename=random_forest_binary,
+    sk_model = ScikitModel(filename=random_forest_binary,
                             version='0.1.0')
 
     sk_model._load_model()
@@ -86,7 +86,7 @@ def test_predict_valid_input(binary_classifier_data, random_forest_binary):
 
     X_list = X.tolist()
 
-    sk_model = SklearnModel(filename=random_forest_binary,
+    sk_model = ScikitModel(filename=random_forest_binary,
                             version='0.1.0')
 
     out = sk_model.predict(X_list)
@@ -107,7 +107,7 @@ def test_predict_null_input(binary_classifier_data, random_forest_binary):
 
     X_list = X.tolist()
 
-    sk_model = SklearnModel(filename=random_forest_binary,
+    sk_model = ScikitModel(filename=random_forest_binary,
                             version='0.1.0')
 
     out = sk_model.predict(X_list)
@@ -126,7 +126,7 @@ def test_predict_invalid_columns(binary_classifier_data, random_forest_binary):
 
     X_list = X.tolist()
 
-    sk_model = SklearnModel(filename=random_forest_binary,
+    sk_model = ScikitModel(filename=random_forest_binary,
                             version='0.1.0')
 
     out = sk_model.predict(X_list)
@@ -142,7 +142,7 @@ def test_predict_no_predict_method(binary_classifier_data, random_forest_binary)
 
     X_list = X.tolist()
 
-    sk_model = SklearnModel(filename=random_forest_binary,
+    sk_model = ScikitModel(filename=random_forest_binary,
                             version='0.1.0')
 
     sk_model.model = 'model_object'
@@ -159,7 +159,7 @@ def test_predict_proba_valid_input(binary_classifier_data, random_forest_binary)
 
     X_list = X.tolist()
 
-    sk_model = SklearnModel(filename=random_forest_binary,
+    sk_model = ScikitModel(filename=random_forest_binary,
                             version='0.1.0')
 
     out = sk_model.predict_proba(X_list)
@@ -181,7 +181,7 @@ def test_predict_proba_null_input(binary_classifier_data, random_forest_binary):
 
     X_list = X.tolist()
 
-    sk_model = SklearnModel(filename=random_forest_binary,
+    sk_model = ScikitModel(filename=random_forest_binary,
                             version='0.1.0')
 
     out = sk_model.predict_proba(X_list)
@@ -200,7 +200,7 @@ def test_predict_proba_invalid_columns(binary_classifier_data, random_forest_bin
 
     X_list = X.tolist()
 
-    sk_model = SklearnModel(filename=random_forest_binary,
+    sk_model = ScikitModel(filename=random_forest_binary,
                             version='0.1.0')
 
     out = sk_model.predict_proba(X_list)
@@ -217,7 +217,7 @@ def test_predict_no_predict_proba_method(regression_data, random_forest_regresso
 
     X_list = X.tolist()
 
-    sk_model = SklearnModel(filename=random_forest_regressor,
+    sk_model = ScikitModel(filename=random_forest_regressor,
                             version='0.1.0')
 
     out = sk_model.predict_proba(X_list)
