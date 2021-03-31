@@ -1,9 +1,11 @@
 version: '3'
 
 services:
-  model_deploy_dev:
+  model_deploy:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     volumes:
       - .:/app
+    ports:
+      - "8000:8000"
