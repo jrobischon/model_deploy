@@ -1,11 +1,19 @@
 version: '3'
 
 services:
-  ml_api:
+  ml_api_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+
+  test_api:
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "8000:80"
+    command: ["python", "-m", "ml_api.tests.example_api"]
