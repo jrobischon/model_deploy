@@ -52,3 +52,6 @@ def random_forest_regressor(regression_data):
     rf_pkl = pickle.dumps(rf)
     return io.BytesIO(rf_pkl)
 
+@pytest.fixture()
+def api_url():
+    return 'http://0.0.0.0:80'
