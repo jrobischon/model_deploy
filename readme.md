@@ -9,10 +9,10 @@ docker-compose up --build
 
 Launch interactive Python session in container
 ```shell script
-docker-compose run ml_api
+docker-compose run ml_api_dev python
 ```
 
 Running unit tests
 ```shell script
-docker-compose run ml_api pytest --cov=ml_api ml_api/tests/
+docker-compose up
 ```
