@@ -1,6 +1,5 @@
 from joblib import load
 import numpy as np
-import json
 import logging
 
 class ScikitModel(object):
